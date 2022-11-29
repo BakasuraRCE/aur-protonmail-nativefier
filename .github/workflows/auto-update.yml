@@ -30,13 +30,13 @@ jobs:
 
       - name: Commit files
         id: commit
-        if: ${{ steps.new_version.conclusion == 'success' }}
+        if: ${{ always() && steps.new_version.conclusion == 'success' }}
         run: |
           git config --local user.email "bakasura@protonmail.ch"
           git config --local user.name "bakasura"
           git commit -a -m "chore(deps): new version of nodejs-nativefier"
       - name: Push changes
-        if: ${{ steps.commit.conclusion == 'success' }}
+        if: ${{ always() && steps.commit.conclusion == 'success' }}
         uses: ad-m/github-push-action@master
         with:
           branch: ${{ github.ref }}
