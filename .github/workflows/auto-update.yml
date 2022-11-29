@@ -17,8 +17,9 @@ jobs:
         run: |
           remote_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "@$(curl -s https://aur.archlinux.org/rpc/v5/info/nodejs-nativefier | jq --raw-output '.results[0].LastModified')")
           local_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(git log -1 --format=%cI)")
-          if [[ "$remote_date" > "$local_date" ]] || [[ "$remote_date" == "$date_local" ]]; then exit 1; else exit 0; fi
+          if [[ "$remote_date" > "$local_date" ]] || [[ "$remote_date" == "$local_date" ]]; then exit 1; else exit 0; fi
       - name: Update PKGBUILD
+        id: new_version
         if: failure()
         run: |
           NEW_RELEASE=$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
@@ -26,10 +27,11 @@ jobs:
           sed -i "s/^pkgrel.*/pkgrel=1/g" PKGBUILD
 
       - name: Commit files
+        if: ${{ steps.new_version.conclusion == 'success' }}
         run: |
+          git config --local user.email "bakasura@protonmail.ch"
+          git config --local user.name "bakasura"
           git commit -a -m "chore(deps): new version of nodejs-nativefier"
-#          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-#          git config --local user.name "github-actions[bot]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
