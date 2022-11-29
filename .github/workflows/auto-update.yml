@@ -45,6 +45,6 @@ jobs:
           github_token: ${{ secrets.GH_TOKEN }}
           branch: master
   push-to-aur:
-    if: ${{ jobs.check-update.steps.check_version.outputs.must_update == 1 }}
     needs: check-update
+    if: ${{ check-update.steps.check_version.outputs.must_update == 1 }}
     uses: ./.github/workflows/main.yml
