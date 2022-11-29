@@ -15,7 +15,7 @@ jobs:
           ref: 'master'
 
       - name: Publish AUR package
-        uses: KSXGitHub/github-actions-deploy-aur@2.6.0
+        uses: KSXGitHub/github-actions-deploy-aur@v2.6.0
         with:
           pkgname: protonmail-nativefier
           pkgbuild: ./PKGBUILD
