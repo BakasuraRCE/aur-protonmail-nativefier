@@ -1,4 +1,4 @@
-name: aur-publish
+name: Push to AUR
 
 on:
   workflow_dispatch:
