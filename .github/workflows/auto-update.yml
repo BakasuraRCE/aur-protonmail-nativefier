@@ -51,3 +51,4 @@ jobs:
     needs: check_update
     if: ${{ needs.check_update.outputs.must-update == 1 }}
     uses: ./.github/workflows/main.yml
+    secrets: inherit
