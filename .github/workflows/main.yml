@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: 'master''
+          ref: 'master'
 
       - name: Publish AUR package
         uses: anas-elgarhy/aur-release-action@v4.1
