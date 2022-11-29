@@ -40,4 +40,5 @@ jobs:
         if: ${{ always() && steps.commit.conclusion == 'success' }}
         uses: ad-m/github-push-action@master
         with:
+          github_token: ${{ secrets.GH_TOKEN }}
           branch: master
