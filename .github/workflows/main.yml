@@ -3,7 +3,7 @@ name: aur-publish
 on:
   push:
     branches:
-      - master
+      - github
 
 jobs:
   aur-publish:
