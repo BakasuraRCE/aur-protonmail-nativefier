@@ -14,16 +14,18 @@ jobs:
           ref: master
           fetch-depth: 0
       - name: Check for new version
+        id: check_version
         run: |
           git branch
           remote_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "@$(curl -s https://aur.archlinux.org/rpc/v5/info/nodejs-nativefier | jq --raw-output '.results[0].LastModified')")
           local_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(git log -1 --format=%cI PKGBUILD)")
           echo "Remote date: $remote_date"
           echo "Local date: $local_date"
-          if [[ "$remote_date" > "$local_date" ]] || [[ "$remote_date" == "$local_date" ]]; then exit 1; else exit 0; fi
+          must_update=0
+          if [[ "$remote_date" > "$local_date" ]] || [[ "$remote_date" == "$local_date" ]]; then must_update=1; fi
+          echo "must_update=$must_update" >> $GITHUB_OUTPUT
       - name: Update PKGBUILD
-        id: new_version
-        if: failure()
+        if: ${{ steps.check_version.outputs.must_update == 1 }}
         run: |
           NEW_RELEASE=$(printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)")
           sed -i "s/^pkgver.*/pkgver=${NEW_RELEASE}/g" PKGBUILD
@@ -31,13 +33,13 @@ jobs:
 
       - name: Commit files
         id: commit
-        if: ${{ always() && steps.new_version.conclusion == 'success' }}
+        if: ${{ steps.check_version.outputs.must_update == 1 }}
         run: |
           git config --local user.email "bakasura@protonmail.ch"
           git config --local user.name "bakasura"
           git commit -a -m "chore(deps): new version of nodejs-nativefier"
       - name: Push changes
-        if: ${{ always() && steps.commit.conclusion == 'success' }}
+        if: ${{ steps.check_version.outputs.must_update == 1 }}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GH_TOKEN }}
