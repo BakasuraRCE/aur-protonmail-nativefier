@@ -24,3 +24,12 @@ jobs:
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
           commit_message: Update AUR package
           ssh_keyscan_types: rsa,dsa,ecdsa,ed25519
+          updpkgsums: 'true'
+          assets: |
+            multiaccount.patch
+            protonmail-nativefier.desktop
+            protonmail-nativefier.png
+            protonmail-nativefier-2.desktop
+            protonmail-nativefier-3.desktop
+            protonmail-nativefier-4.desktop
+            protonmail-nativefier-5.desktop
