@@ -15,8 +15,12 @@ jobs:
           ref: 'master'
 
       - name: Publish AUR package
-        uses: anas-elgarhy/aur-release-action@v4.1
+        uses: KSXGitHub/github-actions-deploy-aur@2.6.0
         with:
-          package_name: protonmail-nativefier
+          pkgname: protonmail-nativefier
+          pkgbuild: ./PKGBUILD
+          commit_username: bakasura
+          commit_email: bakasura@protonmail.ch
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          commit_message: Update AUR package
+          ssh_keyscan_types: rsa,dsa,ecdsa,ed25519
