@@ -15,6 +15,7 @@ jobs:
           fetch-depth: 0
       - name: Check for new version
         run: |
+          git branch
           remote_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "@$(curl -s https://aur.archlinux.org/rpc/v5/info/nodejs-nativefier | jq --raw-output '.results[0].LastModified')")
           local_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(git log -1 --format=%cI PKGBUILD)")
           echo "Remote date: $remote_date"
