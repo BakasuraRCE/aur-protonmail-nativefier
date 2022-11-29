@@ -8,6 +8,8 @@ on:
 jobs:
   check_update:
     runs-on: ubuntu-latest
+    outputs:
+      must-update: ${{ steps.check_version.outputs.must_update }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -24,6 +26,7 @@ jobs:
           must_update=0
           if [[ "$remote_date" > "$local_date" ]] || [[ "$remote_date" == "$local_date" ]]; then must_update=1; fi
           echo "must_update=$must_update" >> $GITHUB_OUTPUT
+#          echo "::set-output name=must-update::1"
       - name: Update PKGBUILD
         if: ${{ steps.check_version.outputs.must_update == 1 }}
         run: |
@@ -46,5 +49,5 @@ jobs:
           branch: master
   push-to-aur:
     needs: check_update
-    if: ${{ needs.check_update.steps.check_version.outputs.must_update == 1 }}
+    if: ${{ needs.check_update.outputs.must-update == 1 }}
     uses: ./.github/workflows/main.yml
