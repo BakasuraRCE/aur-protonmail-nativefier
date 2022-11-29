@@ -11,12 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: 'master'
+          ref: master
           fetch-depth: 0
       - name: Check for new version
         run: |
           remote_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "@$(curl -s https://aur.archlinux.org/rpc/v5/info/nodejs-nativefier | jq --raw-output '.results[0].LastModified')")
           local_date=$(date --utc +"%Y-%m-%d %H:%M:%S" -d "$(git log -1 --format=%cI)")
+          echo "$remote_date"
+          echo "$local_date"
           if [[ "$remote_date" > "$local_date" ]] || [[ "$remote_date" == "$local_date" ]]; then exit 1; else exit 0; fi
       - name: Update PKGBUILD
         id: new_version
