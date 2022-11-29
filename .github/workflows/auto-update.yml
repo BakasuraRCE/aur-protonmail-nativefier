@@ -46,5 +46,5 @@ jobs:
           branch: master
   push-to-aur:
     needs: check_update
-    if: ${{ check_update.steps.check_version.outputs.must_update == 1 }}
+    if: ${{ needs.check_update.steps.check_version.outputs.must_update == 1 }}
     uses: ./.github/workflows/main.yml
